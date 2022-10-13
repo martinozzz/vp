@@ -1,5 +1,7 @@
 <?php
+	session_start();
 	require_once "../config.php";
+	require "fnc_user.php";
 	//echo $server_host;
 	$author_name = "Martin Ost";
 	$full_time_now = date("d.m.Y H:i:s");
@@ -130,6 +132,13 @@
 		}
 		
 	}
+	$login_error = null;
+	if(isset($_POST["login_submit"])){
+		echo "Login!";
+		//login sisse
+		$login_error = sign_in($_POST["email_input"], $_POST["password_input"]);
+        
+	}
 	
 	// vaatame, mida vormis sisestati
 	//var_dump($_POST);
@@ -137,6 +146,7 @@
 
 	if (isset($_POST["todays_adjective_input"]) and !empty($_POST["todays_adjective_input"]))
 	$todays_adjective = $_POST["todays_adjective_input"];
+	
 
 	
 
@@ -152,6 +162,15 @@
 	<h1><?php echo $author_name;?> programmeerib veebi.</h1>
 	<p>See leht on loodud õppetöö raames ja ei sisalda tõsiseltvõetavat sisu!</p>
 	<p>Õppetöö toimus <a href="https://www.tlu.ee" target="_blank">Tallinna Ülikoolis</a> Digitehnoloogiate instituudis.</p>
+	<hr>
+	<h2>Logi sisse</h2>
+	<form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+	<input type="email" name="email_input" placeholder="Kasutajatunnus ehk e-post">
+	<input type="password" name="password_input" placeholder="salasõna">
+	<input type="submit" name="login_submit" value="Logi sisse"><span><strong><?php echo $login_error; ?></strong></span>
+	</form>
+	<p>Või <a href="add_user.php">loo</a> endale kasutaja!</p>
+	<hr>
 	<p>Lehe avamise hetk: <?php echo $weekdaynames_et[$weekday_now - 1] .", " .$full_time_now;?></p>
 	<p>Praegu on <?php echo $part_of_day;?>.</p>
 	<p>Vanasõna loos: <?php echo $vanasonad[$vanasona_loos];?></p>
@@ -199,9 +218,5 @@
 		</select>
 		<input type="submit" id="photo_submit" name="photo_submit" value="Määra pilt">
 	</form>
-
-	<hr>
-		<?php echo $photo_html; ?>
-	<hr>
-</body>
-</html>
+<?php echo $photo_html; ?>
+<?php require_once "footer.php";?>
